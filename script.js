@@ -228,3 +228,4 @@ async function sendAnswers() {
     button.textContent = "ارسال جواب‌ها 💌";
   }
 
+  {  
