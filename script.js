@@ -190,39 +190,50 @@ function chooseSnack(snack) {
   `;
 }
 
-function loveAnswer(answer) {
-  document.getElementById("page").innerHTML = `
-    <h1>می‌دونستم عاشقمییی! 😂❤️</h1>
-    <p>حالا هرچی تو دلته رو بم بگو 🥺❤️</p>
-
-    <textarea id="heartMessage"
-      rows="5"
-      placeholder="اینجا برام بنویس جوجو... ❤️"
-      style="width:90%; max-width:400px; box-sizing:border-box;">
-    </textarea>
-
-    <br><br>
-    <button onclick="showFinal()">ثبت حرفای دلم ❤️</button>
-  `;
-}
-
 function showFinal() {
   const message = document.getElementById("heartMessage").value.trim();
 
   document.getElementById("page").innerHTML = `
     <h1>پس قرارمااا! 🎉❤️</h1>
-
     <p>ساعت: ${selectedTime}</p>
     <p>تاریخ: ${selectedDate}</p>
     <p>مکان: گلزار شهدا 🌹</p>
     <p>خوراکی: ${selectedSnack}</p>
-
     <h3>حرفای تو به من: 💌</h3>
     <p id="finalMessage"></p>
-
+    <button onclick="sendAnswers()">ارسال جواب‌ها 💌</button>
     <h2>میبینمت جوجو ❤️</h2>
   `;
 
   document.getElementById("finalMessage").textContent =
     message || "هیچی نگفتی که! 😂❤️";
+
+  window.savedMessage = message || "هیچی نگفتی که! 😂❤️";
+}
+
+function sendAnswers() {
+  const form = document.createElement("form");
+  form.action = "https://formsubmit.co/ایمیل-خودت";
+  form.method = "POST";
+  form.target = "_blank";
+
+  const answers = {
+    "ساعت": selectedTime,
+    "تاریخ": selectedDate,
+    "مکان": "گلزار شهدا",
+    "خوراکی": selectedSnack,
+    "پیام": window.savedMessage
+  };
+
+  for (const [name, value] of Object.entries(answers)) {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
 }
