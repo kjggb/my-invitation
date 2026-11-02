@@ -45,7 +45,7 @@ function startQuestion() {
     runAway();
   };
 noBtn.onmouseover = runAway;
-noBtn.ontouchstart = runAway;
+noBtn.ontouchstart = runAway;noBtn.ontouchstart = runAway;
 }
   
 }
