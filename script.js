@@ -33,6 +33,7 @@ function startQuestion() {
 
   noBtn.onclick = function() {
     count++;
+
     const messages = [
       "غلط می‌کنی 😂",
       "چقد پرویی آخه 😂",
@@ -104,6 +105,7 @@ function nextStep() {
 
   document.getElementById("page").innerHTML = `
     <h1>حالا چه ساعتی بریم؟ ⏰</h1>
+
     <select id="time">
       <option>۱۰ صبح</option>
       <option>۱۲ ظهر</option>
@@ -112,6 +114,7 @@ function nextStep() {
       <option>۶ عصر</option>
       <option>۸ شب</option>
     </select>
+
     <br><br>
     <button onclick="choosePlace()">ثبت ساعت ❤️</button>
   `;
@@ -137,9 +140,18 @@ function placeMessage() {
 function snackStep() {
   document.getElementById("page").innerHTML = `
     <h1>چی بیارم برات کوفت کنی؟ 😂</h1>
-    <button onclick="chooseSnack('لواشک کوچولو')">لواشک کوچولو 🍒</button>
-    <button onclick="chooseSnack('شکلات')">شکلات 🍫</button>
-    <button id="iceBtn">بستنی تماماً کاکائو 🍦</button>
+
+    <button onclick="chooseSnack('لواشک کوچولو')">
+      لواشک کوچولو 🍒
+    </button>
+
+    <button onclick="chooseSnack('شکلات')">
+      شکلات 🍫
+    </button>
+
+    <button id="iceBtn">
+      بستنی تماماً کاکائو 🍦
+    </button>
   `;
 
   const iceBtn = document.getElementById("iceBtn");
@@ -154,7 +166,7 @@ function snackStep() {
       "یکی از اون دوتا رو انتخاب کن اذیت نده 😂"
     ];
 
-    alert(messages[count - 1]);
+    alert(messages[Math.min(count - 1, 2)]);
 
     if (count < 3) {
       iceBtn.style.position = "fixed";
@@ -169,9 +181,18 @@ function chooseSnack(snack) {
 
   document.getElementById("page").innerHTML = `
     <h1>حالا دوسم داری؟ 🥺❤️</h1>
-    <button onclick="loveAnswer('بله')">الف) بله ❤️</button>
-    <button onclick="loveAnswer('گزینه الف')">ب) گزینه الف 😂</button>
-    <button onclick="loveAnswer('گزینه الف و ب')">ج) گزینه الف و ب 😎</button>
+
+    <button onclick="loveAnswer('بله')">
+      الف) بله ❤️
+    </button>
+
+    <button onclick="loveAnswer('گزینه الف')">
+      ب) گزینه الف 😂
+    </button>
+
+    <button onclick="loveAnswer('گزینه الف و ب')">
+      ج) گزینه الف و ب 😎
+    </button>
   `;
 }
 
@@ -180,12 +201,47 @@ function loveAnswer(answer) {
 
   document.getElementById("page").innerHTML = `
     <h1>حالا هرچی تو دلته رو بم بگو 🥺❤️</h1>
-    <textarea id="heartMessage" rows="5"
+
+    <textarea
+      id="heartMessage"
+      rows="5"
       placeholder="اینجا برام بنویس جوجو... ❤️"
-      style="width:90%; max-width:400px; box-sizing:border-box;"></textarea>
+      style="width:90%; max-width:400px; box-sizing:border-box;"
+    ></textarea>
+
     <br><br>
-    <button onclick="showFinal()">ثبت حرفای دلم ❤️</button>
+
+    <button onclick="showFinal()">
+      ثبت حرفای دلم ❤️
+    </button>
   `;
+}
+
+function showFinal() {
+  const message = document.getElementById("heartMessage").value.trim();
+
+  savedMessage = message || "هیچی نگفتی که! 😂❤️";
+
+  document.getElementById("page").innerHTML = `
+    <h1>پس قرارمااا! 🎉❤️</h1>
+
+    <p>ساعت: ${selectedTime}</p>
+    <p>تاریخ: ${selectedDate}</p>
+    <p>مکان: گلزار شهدا 🌹</p>
+    <p>خوراکی: ${selectedSnack}</p>
+    <p>جواب دوست داشتن: ${selectedLoveAnswer}</p>
+
+    <h3>حرفای تو به من: 💌</h3>
+    <p id="finalMessage"></p>
+
+    <button onclick="sendAnswers()">
+      ارسال جواب‌ها 💌
+    </button>
+
+    <h2>میبینمت جوجو ❤️</h2>
+  `;
+
+  document.getElementById("finalMessage").textContent = savedMessage;
 }
 
 async function sendAnswers() {
@@ -212,12 +268,16 @@ async function sendAnswers() {
           خوراکی: selectedSnack,
           "جواب دوست داشتن": selectedLoveAnswer,
           پیام: savedMessage,
-          _subject: "جواب‌های دعوت‌نامه"
+          _subject: "جواب‌های دعوت‌نامه ❤️"
         })
       }
     );
 
-    if (!response.ok) throw new Error("ارسال ناموفق");
+    const result = await response.json();
+
+    if (!response.ok || result.success === "false" || result.success === false) {
+      throw new Error("ارسال ناموفق");
+    }
 
     alert("جواب‌ها ارسال شدند ❤️");
     button.textContent = "ارسال شد ❤️";
@@ -227,5 +287,4 @@ async function sendAnswers() {
     button.disabled = false;
     button.textContent = "ارسال جواب‌ها 💌";
   }
-
-  {  
+}
