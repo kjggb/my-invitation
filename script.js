@@ -47,7 +47,7 @@ function startQuestion() {
 noBtn.ontouchstart = runAway;
 }
   
-
+{
 
 function yes() {
   document.getElementById("page").innerHTML = `
