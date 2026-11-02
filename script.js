@@ -188,52 +188,43 @@ function loveAnswer(answer) {
   `;
 }
 
-function showFinal() {
-  const message = document.getElementById("heartMessage").value.trim();
-  savedMessage = message || "هیچی نگفتی که! 😂❤️";
+async function sendAnswers() {
+  const button = document.querySelector(
+    'button[onclick="sendAnswers()"]'
+  );
 
-  document.getElementById("page").innerHTML = `
-    <h1>پس قرارمااا! 🎉❤️</h1>
-    <p>ساعت: ${selectedTime}</p>
-    <p>تاریخ: ${selectedDate}</p>
-    <p>مکان: گلزار شهدا 🌹</p>
-    <p>خوراکی: ${selectedSnack}</p>
-    <p>جواب دوست داشتن: ${selectedLoveAnswer}</p>
-    <h3>حرفای تو به من: 💌</h3>
-    <p id="finalMessage"></p>
-    <button onclick="sendAnswers()">ارسال جواب‌ها 💌</button>
-    <h2>میبینمت جوجو ❤️</h2>
-  `;
+  button.disabled = true;
+  button.textContent = "در حال ارسال...";
 
-  document.getElementById("finalMessage").textContent = savedMessage;
-}
+  try {
+    const response = await fetch(
+      "https://formsubmit.co/ajax/q35905285@gmail.com",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          تاریخ: selectedDate,
+          ساعت: selectedTime,
+          مکان: "گلزار شهدا",
+          خوراکی: selectedSnack,
+          "جواب دوست داشتن": selectedLoveAnswer,
+          پیام: savedMessage,
+          _subject: "جواب‌های دعوت‌نامه"
+        })
+      }
+    );
 
-function sendAnswers() {
-  const form = document.createElement("form");
+    if (!response.ok) throw new Error("ارسال ناموفق");
 
-  form.action = "https://formsubmit.co/q35905285@gmail.com";
-  form.method = "POST";
-  form.target = "_blank";
+    alert("جواب‌ها ارسال شدند ❤️");
+    button.textContent = "ارسال شد ❤️";
 
-  const answers = {
-    "تاریخ": selectedDate,
-    "ساعت": selectedTime,
-    "مکان": "گلزار شهدا",
-    "خوراکی": selectedSnack,
-    "جواب دوست داشتن": selectedLoveAnswer,
-    "پیام": savedMessage,
-    "_subject": "جواب‌های دعوت‌نامه ❤️"
-  };
-
-  for (const [name, value] of Object.entries(answers)) {
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = name;
-    input.value = value;
-    form.appendChild(input);
+  } catch (error) {
+    alert("ارسال انجام نشد؛ دوباره امتحان کن.");
+    button.disabled = false;
+    button.textContent = "ارسال جواب‌ها 💌";
   }
-
-  document.body.appendChild(form);
-  form.submit();
-  form.remove();
 }
