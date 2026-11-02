@@ -225,4 +225,3 @@ function showFinal() {
   document.getElementById("finalMessage").textContent =
     message || "هیچی نگفتی که! 😂❤️";
 }
-noBtn.ontouchstart = runAway;
