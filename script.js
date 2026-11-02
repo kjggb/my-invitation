@@ -227,4 +227,4 @@ async function sendAnswers() {
     button.disabled = false;
     button.textContent = "ارسال جواب‌ها 💌";
   }
-}
+
